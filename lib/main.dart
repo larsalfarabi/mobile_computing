@@ -1,3 +1,6 @@
+import 'package:cakrawala_app/belajar_state/page.dart';
+import 'package:cakrawala_app/detail_product/page.dart';
+import 'package:cakrawala_app/product_list/page.dart';
 import 'package:cakrawala_app/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 
@@ -11,11 +14,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Latihan Flutter',
-      home: ProfilePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HalamanUtama(),
+        '/belajar-state': (context) => const BelajarState(),
+        '/products': (context) => ProductList(),
+        '/profile': (context) => ProfilePage(),
+        '/detail-product': (context) => const DetailProduct()
+      },
     );
   }
-  
 }
 
 class HalamanUtama extends StatefulWidget {
@@ -26,34 +36,64 @@ class HalamanUtama extends StatefulWidget {
 }
 
 class _HalamanUtamaState extends State<HalamanUtama> {
-  int counter = 0;
-  String pesan = 'Belum ditekan';
+  int _selectedIndex = 0;
 
-  void tambah() {
-    setState(() {
-      counter++;
-      pesan = 'Sudah ditekan $counter kali';
-    });
-  }
+  final List<Widget> _pages = [
+    ProductList(),
+    const BelajarState(),
+    ProfilePage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Belajar State'),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              pesan,
-              style: const TextStyle(fontSize: 20),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, -4),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: tambah,
-              child: const Text('Tekan Saya'),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          elevation: 0,
+          backgroundColor: colorScheme.surface,
+          selectedItemColor: colorScheme.primary,
+          unselectedItemColor: colorScheme.onSurface.withOpacity(0.4),
+          selectedLabelStyle:
+              const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+          unselectedLabelStyle:
+              const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag_outlined),
+              activeIcon: Icon(Icons.shopping_bag_rounded),
+              label: 'Products',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance_wallet_outlined),
+              activeIcon: Icon(Icons.account_balance_wallet_rounded),
+              label: 'State',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person_rounded),
+              label: 'Profile',
             ),
           ],
         ),
