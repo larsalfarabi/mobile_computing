@@ -36,50 +36,38 @@ class _BelajarStateState extends State<BelajarState> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("BCA Mobile"),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              labelText: "Masukkan Input...",
+              border: OutlineInputBorder(),
+            ),
           ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _onSubmit,
+            child: const Text('Submit'),
+          ),
+          Text('Result : $labelInput', style: const TextStyle(fontSize: 24)),
+          const SizedBox(height: 24),
+          Expanded(
+            child: ListView.builder(
+              itemCount: listItems.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.list),
+                    title: Text(listItems[index]),
+                  ),
+                );
+              },
+            ),
+          )
         ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                labelText: "Masukkan Input...",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _onSubmit,
-              child: const Text('Submit'),
-            ),
-            Text('Result : $labelInput', style: const TextStyle(fontSize: 24)),
-            const SizedBox(height: 24),
-            Expanded(
-              child: ListView.builder(
-                itemCount: listItems.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.list),
-                      title: Text(listItems[index]),
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
-        ),
       ),
     );
   }

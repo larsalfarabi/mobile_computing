@@ -1,5 +1,8 @@
 import 'package:cakrawala_app/belajar_state/page.dart';
 import 'package:cakrawala_app/detail_product/page.dart';
+import 'package:cakrawala_app/email_list/page.dart';
+import 'package:cakrawala_app/interaksi_halaman/page.dart';
+import 'package:cakrawala_app/login/page.dart';
 import 'package:cakrawala_app/product_list/page.dart';
 import 'package:cakrawala_app/profile/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +19,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Latihan Flutter',
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
         '/': (context) => const HalamanUtama(),
         '/belajar-state': (context) => const BelajarState(),
         '/products': (context) => ProductList(),
-        '/profile': (context) => ProfilePage(),
-        '/detail-product': (context) => const DetailProduct()
+        '/profile': (context) => const ProfilePage(),
+        '/detail-product': (context) => const DetailProduct(),
+        '/login': (context) => const LoginPage(),
+        '/mail': (context) => const EmailList(),
+        '/interaksi': (context) => const InteraksiPage()
       },
     );
   }
@@ -36,19 +42,54 @@ class HalamanUtama extends StatefulWidget {
 }
 
 class _HalamanUtamaState extends State<HalamanUtama> {
-  int _selectedIndex = 0;
+  var _selectedIndex = 0;
 
   final List<Widget> _pages = [
     ProductList(),
     const BelajarState(),
-    ProfilePage(),
+    const ProfilePage(),
   ];
 
+  final List<String> _titleList = ["Product List", "Belajar State", "Profile"];
+
+  Drawer get customDrawer => Drawer(
+        child: ListView(
+          padding: const EdgeInsets.all(12),
+          children: [
+            const ListTile(
+              title: Text("Beranda"),
+            ),
+            const ListTile(
+              title: Text("Profile"),
+            ),
+            ListTile(
+              title: const Text("Belajar Interaksi"),
+              onTap: () {
+                Navigator.of(context).pushNamed("/interaksi");
+              },
+            ),
+            const Divider(),
+            const ListTile(
+              title: Text("Logout"),
+            ),
+          ],
+        ),
+      );
+
+  get emailAction => IconButton(
+      onPressed: () {
+        Navigator.of(context).pushNamed('/mail');
+      },
+      icon: const Icon(Icons.email));
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(_titleList[_selectedIndex]),
+        actions: [_selectedIndex != 2 ? emailAction : const SizedBox.shrink()],
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
@@ -57,7 +98,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 20,
               offset: const Offset(0, -4),
             ),
@@ -73,7 +114,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
           elevation: 0,
           backgroundColor: colorScheme.surface,
           selectedItemColor: colorScheme.primary,
-          unselectedItemColor: colorScheme.onSurface.withOpacity(0.4),
+          unselectedItemColor: colorScheme.onSurface.withValues(alpha: 0.4),
           selectedLabelStyle:
               const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           unselectedLabelStyle:
@@ -98,6 +139,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
           ],
         ),
       ),
+      drawer: customDrawer,
     );
   }
 }
